@@ -1,0 +1,166 @@
+:root {
+  --color-bg: #1c1a15;
+  --color-bg-alt: #2a271e;
+  --color-text: #f4f1e8;
+  --color-text-muted: #c9c2b0;
+  --color-accent: #b5652c;
+  --color-accent-dark: #8a4a1e;
+  --max-width: 900px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  background: var(--color-bg);
+  color: var(--color-text);
+  line-height: 1.6;
+}
+
+a {
+  color: var(--color-accent);
+}
+
+header.site-header {
+  background: var(--color-bg-alt);
+  border-bottom: 3px solid var(--color-accent);
+  padding: 1.5rem 1rem;
+}
+
+.site-header .inner {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.site-title {
+  font-size: 1.75rem;
+  margin: 0;
+  letter-spacing: 0.02em;
+}
+
+.site-title a {
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+nav.site-nav a {
+  color: var(--color-text-muted);
+  text-decoration: none;
+  margin-left: 1.25rem;
+  font-family: Arial, sans-serif;
+  font-size: 0.95rem;
+}
+
+nav.site-nav a:hover {
+  color: var(--color-accent);
+}
+
+main {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 2rem 1rem 4rem;
+}
+
+.hero {
+  text-align: center;
+  padding: 2rem 1rem;
+}
+
+.hero p {
+  color: var(--color-text-muted);
+  max-width: 600px;
+  margin: 0.5rem auto 0;
+}
+
+.subscribe-form {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-top: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.subscribe-form input[type="email"] {
+  padding: 0.6rem 0.8rem;
+  border: 1px solid var(--color-text-muted);
+  border-radius: 4px;
+  font-size: 1rem;
+  min-width: 240px;
+}
+
+.subscribe-form button {
+  padding: 0.6rem 1.2rem;
+  background: var(--color-accent);
+  border: none;
+  border-radius: 4px;
+  color: var(--color-text);
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.subscribe-form button:hover {
+  background: var(--color-accent-dark);
+}
+
+.form-note {
+  font-family: Arial, sans-serif;
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  margin-top: 0.5rem;
+}
+
+.issue-list {
+  list-style: none;
+  padding: 0;
+}
+
+.issue-list li {
+  border-bottom: 1px solid var(--color-bg-alt);
+  padding: 1rem 0;
+}
+
+.issue-list .issue-date {
+  font-family: Arial, sans-serif;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  display: block;
+}
+
+.issue-list a {
+  font-size: 1.2rem;
+  text-decoration: none;
+}
+
+.issue-list a:hover {
+  text-decoration: underline;
+}
+
+article.issue h1 {
+  margin-bottom: 0.25rem;
+}
+
+article.issue .issue-date {
+  font-family: Arial, sans-serif;
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+}
+
+article.issue section {
+  margin-top: 2rem;
+}
+
+footer.site-footer {
+  text-align: center;
+  padding: 2rem 1rem;
+  color: var(--color-text-muted);
+  font-family: Arial, sans-serif;
+  font-size: 0.85rem;
+}
