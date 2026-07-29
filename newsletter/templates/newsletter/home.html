@@ -1,0 +1,31 @@
+{% extends "newsletter/base.html" %}
+
+{% block content %}
+<section class="hero">
+  <h1>Weekly bowhunting law &amp; land updates, for the states you hunt</h1>
+  <p>
+    Law changes, proposed regulation changes, public land updates, and EHD
+    reports for up to 3 states — plus a weekly gear pick — delivered every
+    week.
+  </p>
+
+  <form method="post" class="signup-form">
+    {% csrf_token %}
+    <div class="field">
+      {{ form.email.label_tag }}
+      {{ form.email }}
+      {{ form.email.errors }}
+    </div>
+
+    <div class="field">
+      <p class="field-label">Choose up to 3 states</p>
+      <div class="state-grid">
+        {{ form.states }}
+      </div>
+      {{ form.states.errors }}
+    </div>
+
+    <button type="submit">Subscribe</button>
+  </form>
+</section>
+{% endblock %}

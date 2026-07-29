@@ -1,0 +1,150 @@
+:root {
+  --color-bg: #1c1a15;
+  --color-bg-alt: #2a271e;
+  --color-text: #f4f1e8;
+  --color-text-muted: #c9c2b0;
+  --color-accent: #b5652c;
+  --color-accent-dark: #8a4a1e;
+  --max-width: 900px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  background: var(--color-bg);
+  color: var(--color-text);
+  line-height: 1.6;
+}
+
+a {
+  color: var(--color-accent);
+}
+
+header.site-header {
+  background: var(--color-bg-alt);
+  border-bottom: 3px solid var(--color-accent);
+  padding: 1.5rem 1rem;
+}
+
+.site-header .inner {
+  max-width: var(--max-width);
+  margin: 0 auto;
+}
+
+.site-title {
+  font-size: 1.75rem;
+  margin: 0;
+}
+
+.site-title a {
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+main {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 2rem 1rem 4rem;
+}
+
+.hero,
+.notice {
+  text-align: center;
+  padding: 2rem 1rem;
+}
+
+.hero p,
+.notice p {
+  color: var(--color-text-muted);
+  max-width: 600px;
+  margin: 0.5rem auto 0;
+}
+
+.signup-form {
+  max-width: 480px;
+  margin: 2rem auto 0;
+  text-align: left;
+  font-family: Arial, sans-serif;
+}
+
+.field {
+  margin-bottom: 1.25rem;
+}
+
+.field label,
+.field-label {
+  display: block;
+  margin-bottom: 0.4rem;
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+}
+
+.signup-form input[type="email"] {
+  width: 100%;
+  padding: 0.6rem 0.8rem;
+  border: 1px solid var(--color-text-muted);
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.state-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 0.4rem;
+  max-height: 260px;
+  overflow-y: auto;
+  padding: 0.75rem;
+  border: 1px solid var(--color-bg-alt);
+  border-radius: 4px;
+}
+
+.state-grid ul {
+  display: contents;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.state-grid li {
+  list-style: none;
+}
+
+.state-grid label {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.9rem;
+  color: var(--color-text);
+}
+
+.signup-form button {
+  padding: 0.6rem 1.2rem;
+  background: var(--color-accent);
+  border: none;
+  border-radius: 4px;
+  color: var(--color-text);
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.signup-form button:hover {
+  background: var(--color-accent-dark);
+}
+
+.errorlist {
+  color: #e08a5f;
+  font-size: 0.85rem;
+  margin: 0.25rem 0 0;
+}
+
+footer.site-footer {
+  text-align: center;
+  padding: 2rem 1rem;
+  color: var(--color-text-muted);
+  font-family: Arial, sans-serif;
+  font-size: 0.85rem;
+}
