@@ -1,8 +1,15 @@
 {% extends "newsletter/base.html" %}
 
 {% block content %}
-<section class="notice">
-  <h1>You're unsubscribed</h1>
-  <p>{{ subscriber.email }} won't receive any further newsletters. You can re-subscribe anytime from the home page.</p>
-</section>
+<div class="notice-page">
+  <div class="notice-card">
+    <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="9"></circle>
+      <line x1="9" y1="9" x2="15" y2="15"></line>
+      <line x1="15" y1="9" x2="9" y2="15"></line>
+    </svg>
+    <h1>You're unsubscribed</h1>
+    <p>{{ subscriber.email }} won't receive any further newsletters. You can re-subscribe anytime from the <a href="{% url 'newsletter:home' %}">home page</a>.</p>
+  </div>
+</div>
 {% endblock %}

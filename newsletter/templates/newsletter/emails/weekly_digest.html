@@ -1,19 +1,20 @@
 <!DOCTYPE html>
 <html>
-<body style="font-family: Georgia, serif; background:#1c1a15; color:#f4f1e8; padding:24px; max-width:640px; margin:0 auto;">
-  <h1 style="color:#f4f1e8; margin-bottom:0;">{{ state.name }} Bowhunting Update</h1>
-  <p style="color:#c9c2b0; margin-top:4px;">Week of {{ week_of|date:"F j, Y" }}</p>
+<body style="font-family: Georgia, serif; background:#17150f; color:#f2ecdc; padding:24px; max-width:640px; margin:0 auto;">
+  <p style="font-size:1rem; font-weight:bold; margin:0 0 20px; letter-spacing:0.02em;">Broadhead Brief</p>
+  <h1 style="color:#f2ecdc; margin-bottom:0;">{{ state.name }} Update</h1>
+  <p style="color:#b6ac93; margin-top:4px;">Week of {{ week_of|date:"F j, Y" }}</p>
 
   {% for section in sections %}
     {% if section.items %}
-      <h2 style="color:#b5652c; border-bottom:2px solid #b5652c; padding-bottom:4px;">{{ section.label }}</h2>
+      <h2 style="color:#c1622b; border-bottom:2px solid #c1622b; padding-bottom:4px; font-size:1.1rem;">{{ section.label }}</h2>
       {% for item in section.items %}
         <div style="margin-bottom:16px;">
           <p style="margin:0 0 4px; font-weight:bold;">
-            <a href="{{ item.url }}" style="color:#f4f1e8;">{{ item.title }}</a>
+            <a href="{{ item.url }}" style="color:#f2ecdc;">{{ item.title }}</a>
           </p>
           {% if item.summary %}
-            <p style="margin:0; color:#c9c2b0; font-size:14px;">{{ item.summary }}</p>
+            <p style="margin:0; color:#b6ac93; font-size:14px;">{{ item.summary }}</p>
           {% endif %}
         </div>
       {% endfor %}
@@ -21,22 +22,22 @@
   {% endfor %}
 
   {% if products %}
-    <h2 style="color:#b5652c; border-bottom:2px solid #b5652c; padding-bottom:4px;">This Week's Gear Picks for {{ state.name }}</h2>
+    <h2 style="color:#c1622b; border-bottom:2px solid #c1622b; padding-bottom:4px; font-size:1.1rem;">This Week's Gear Picks for {{ state.name }}</h2>
     {% for product in products %}
       <div style="margin-bottom:16px;">
         <p style="margin:0 0 4px; font-weight:bold;">
-          <a href="{{ product.url }}" style="color:#f4f1e8;">{{ product.name }}</a>
+          <a href="{{ product.url }}" style="color:#f2ecdc;">{{ product.name }}</a>
         </p>
         {% if product.description %}
-          <p style="margin:0; color:#c9c2b0; font-size:14px;">{{ product.description }}</p>
+          <p style="margin:0; color:#b6ac93; font-size:14px;">{{ product.description }}</p>
         {% endif %}
       </div>
     {% endfor %}
   {% endif %}
 
-  <p style="color:#c9c2b0; font-size:12px; margin-top:32px; border-top:1px solid #2a271e; padding-top:16px;">
-    You're receiving this because you subscribed to {{ state.name }} updates on Bowhunting Newsletter.
-    <a href="{{ unsubscribe_url }}" style="color:#c9c2b0;">Unsubscribe</a>
+  <p style="color:#b6ac93; font-size:12px; margin-top:32px; border-top:1px solid #3d3626; padding-top:16px;">
+    You're receiving this because you subscribed to {{ state.name }} updates on Broadhead Brief.
+    <a href="{{ unsubscribe_url }}" style="color:#b6ac93;">Unsubscribe</a>
   </p>
 </body>
 </html>

@@ -83,7 +83,7 @@ SITE_BASE_URL = config("SITE_BASE_URL", default="http://127.0.0.1:8000")
 # terminal) so signup/send flows can be tested without a real Resend account.
 RESEND_API_KEY = config("RESEND_API_KEY", default="")
 DEFAULT_FROM_EMAIL = config(
-    "DEFAULT_FROM_EMAIL", default="Bowhunting Newsletter <newsletter@example.com>"
+    "DEFAULT_FROM_EMAIL", default="Broadhead Brief <newsletter@example.com>"
 )
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 

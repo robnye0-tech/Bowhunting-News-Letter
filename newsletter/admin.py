@@ -2,6 +2,10 @@ from django.contrib import admin
 
 from .models import ContentItem, ContentSource, NewsletterIssue, Product, State, Subscriber, Subscription
 
+admin.site.site_header = "Broadhead Brief Admin"
+admin.site.site_title = "Broadhead Brief"
+admin.site.index_title = "Weekly Curation Dashboard"
+
 
 @admin.register(State)
 class StateAdmin(admin.ModelAdmin):

@@ -1,11 +1,17 @@
 :root {
-  --color-bg: #1c1a15;
-  --color-bg-alt: #2a271e;
-  --color-text: #f4f1e8;
-  --color-text-muted: #c9c2b0;
-  --color-accent: #b5652c;
-  --color-accent-dark: #8a4a1e;
-  --max-width: 900px;
+  --color-bg: #17150f;
+  --color-bg-alt: #211d15;
+  --color-card: #29241a;
+  --color-border: #3d3626;
+  --color-text: #f2ecdc;
+  --color-text-muted: #b6ac93;
+  --color-forest: #5c6e46;
+  --color-forest-light: #7c9160;
+  --color-rust: #c1622b;
+  --color-rust-dark: #984c22;
+  --color-tan: #d9c9a3;
+  --max-width: 980px;
+  --radius: 8px;
 }
 
 * {
@@ -14,65 +20,205 @@
 
 body {
   margin: 0;
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
   background: var(--color-bg);
   color: var(--color-text);
   line-height: 1.6;
 }
 
-a {
-  color: var(--color-accent);
+h1, h2, h3, .brand {
+  font-family: Georgia, "Times New Roman", serif;
 }
+
+a {
+  color: var(--color-tan);
+}
+
+.container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 1.25rem;
+}
+
+/* --- Header --- */
 
 header.site-header {
   background: var(--color-bg-alt);
-  border-bottom: 3px solid var(--color-accent);
-  padding: 1.5rem 1rem;
+  border-bottom: 3px solid var(--color-rust);
+  padding: 1.1rem 0;
 }
 
 .site-header .inner {
   max-width: var(--max-width);
   margin: 0 auto;
+  padding: 0 1.25rem;
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  flex-wrap: wrap;
 }
 
-.site-title {
-  font-size: 1.75rem;
+.brand {
+  font-size: 1.5rem;
+  font-weight: bold;
   margin: 0;
+  letter-spacing: 0.01em;
 }
 
-.site-title a {
+.brand a {
   color: var(--color-text);
   text-decoration: none;
 }
 
-main {
+.tagline {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+/* --- Hero --- */
+
+.hero {
+  text-align: center;
+  padding: 4rem 1.25rem 3rem;
+  background-color: var(--color-bg);
+  background-image:
+    repeating-radial-gradient(circle at 12% 22%, transparent 0, transparent 24px, rgba(124, 145, 96, 0.07) 25px, rgba(124, 145, 96, 0.07) 26px),
+    repeating-radial-gradient(circle at 88% 78%, transparent 0, transparent 30px, rgba(124, 145, 96, 0.06) 31px, rgba(124, 145, 96, 0.06) 32px);
+}
+
+.hero h1 {
+  font-size: 2.2rem;
+  margin: 0 auto 0.75rem;
+  max-width: 720px;
+}
+
+.hero p.lede {
+  color: var(--color-text-muted);
+  max-width: 560px;
+  margin: 0 auto 1.75rem;
+  font-size: 1.05rem;
+}
+
+.button {
+  display: inline-block;
+  padding: 0.75rem 1.6rem;
+  background: var(--color-rust);
+  border: none;
+  border-radius: var(--radius);
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.button:hover {
+  background: var(--color-rust-dark);
+}
+
+/* --- Feature cards --- */
+
+.features {
+  padding: 2.5rem 1.25rem;
+}
+
+.features h2,
+.how-it-works h2,
+.signup-section h2 {
+  text-align: center;
+  font-size: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.feature-grid {
   max-width: var(--max-width);
   margin: 0 auto;
-  padding: 2rem 1rem 4rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.25rem;
 }
 
-.hero,
-.notice {
+.feature-card {
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 1.5rem 1.25rem;
   text-align: center;
-  padding: 2rem 1rem;
 }
 
-.hero p,
-.notice p {
+.feature-card svg {
+  color: var(--color-forest-light);
+  margin-bottom: 0.75rem;
+}
+
+.feature-card h3 {
+  font-size: 1.05rem;
+  margin: 0 0 0.4rem;
+}
+
+.feature-card p {
   color: var(--color-text-muted);
-  max-width: 600px;
-  margin: 0.5rem auto 0;
+  font-size: 0.9rem;
+  margin: 0;
 }
 
-.signup-form {
-  max-width: 480px;
-  margin: 2rem auto 0;
-  text-align: left;
-  font-family: Arial, sans-serif;
+/* --- How it works --- */
+
+.how-it-works {
+  padding: 2.5rem 1.25rem;
+  background: var(--color-bg-alt);
+}
+
+.steps {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+}
+
+.step {
+  text-align: center;
+}
+
+.step-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 50%;
+  background: var(--color-forest);
+  color: #fff;
+  font-weight: bold;
+  margin-bottom: 0.6rem;
+}
+
+.step p {
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+  max-width: 260px;
+  margin: 0 auto;
+}
+
+/* --- Signup form --- */
+
+.signup-section {
+  padding: 3rem 1.25rem 4rem;
+}
+
+.signup-card {
+  max-width: 720px;
+  margin: 0 auto;
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 2rem;
 }
 
 .field {
-  margin-bottom: 1.25rem;
+  margin-bottom: 1.5rem;
 }
 
 .field label,
@@ -83,68 +229,132 @@ main {
   font-size: 0.9rem;
 }
 
-.signup-form input[type="email"] {
+.signup-card input[type="email"] {
   width: 100%;
-  padding: 0.6rem 0.8rem;
-  border: 1px solid var(--color-text-muted);
+  padding: 0.65rem 0.85rem;
+  border: 1px solid var(--color-border);
+  background: var(--color-bg);
+  color: var(--color-text);
   border-radius: 4px;
   font-size: 1rem;
 }
 
-.state-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-  gap: 0.4rem;
-  max-height: 260px;
-  overflow-y: auto;
-  padding: 0.75rem;
-  border: 1px solid var(--color-bg-alt);
-  border-radius: 4px;
+.field-label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.6rem;
 }
 
-.state-grid ul {
-  display: contents;
-  list-style: none;
+.field-label-row .field-label {
   margin: 0;
-  padding: 0;
 }
 
-.state-grid li {
-  list-style: none;
+.state-count {
+  font-size: 0.85rem;
+  color: var(--color-forest-light);
+  font-weight: 600;
 }
 
-.state-grid label {
+.state-count.at-limit {
+  color: var(--color-rust);
+}
+
+.regions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 0.9rem;
+}
+
+fieldset.region {
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  padding: 0.6rem 0.8rem 0.8rem;
+  margin: 0;
+}
+
+fieldset.region legend {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-forest-light);
+  padding: 0 0.3rem;
+}
+
+.state-option {
   display: flex;
   align-items: center;
   gap: 0.4rem;
-  font-size: 0.9rem;
-  color: var(--color-text);
+  font-size: 0.88rem;
+  padding: 0.2rem 0;
 }
 
-.signup-form button {
-  padding: 0.6rem 1.2rem;
-  background: var(--color-accent);
-  border: none;
-  border-radius: 4px;
-  color: var(--color-text);
-  font-size: 1rem;
-  cursor: pointer;
+.state-option input:disabled + span {
+  color: var(--color-text-muted);
+  opacity: 0.5;
 }
 
-.signup-form button:hover {
-  background: var(--color-accent-dark);
+.signup-card button.button {
+  width: 100%;
+  margin-top: 0.5rem;
+}
+
+.form-note {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  margin-top: 0.75rem;
+  text-align: center;
 }
 
 .errorlist {
+  list-style: none;
+  padding: 0;
   color: #e08a5f;
   font-size: 0.85rem;
-  margin: 0.25rem 0 0;
+  margin: 0.35rem 0 0;
 }
+
+/* --- Simple notice/card pages (confirmed, pending, unsubscribed) --- */
+
+.notice-page {
+  max-width: 560px;
+  margin: 4rem auto;
+  padding: 0 1.25rem;
+}
+
+.notice-card {
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 2.5rem 2rem;
+  text-align: center;
+}
+
+.notice-card svg {
+  color: var(--color-forest-light);
+  margin-bottom: 1rem;
+}
+
+.notice-card h1 {
+  font-size: 1.5rem;
+  margin: 0 0 0.75rem;
+}
+
+.notice-card p {
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+.notice-card a {
+  color: var(--color-rust);
+}
+
+/* --- Footer --- */
 
 footer.site-footer {
   text-align: center;
-  padding: 2rem 1rem;
+  padding: 2rem 1.25rem;
   color: var(--color-text-muted);
-  font-family: Arial, sans-serif;
   font-size: 0.85rem;
+  border-top: 1px solid var(--color-border);
 }

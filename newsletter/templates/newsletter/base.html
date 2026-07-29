@@ -3,13 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>{% block title %}Bowhunting Newsletter{% endblock %}</title>
+  <title>{% block title %}Broadhead Brief{% endblock %}</title>
   <link rel="stylesheet" href="/static/newsletter/style.css" />
 </head>
 <body>
   <header class="site-header">
     <div class="inner">
-      <p class="site-title"><a href="{% url 'newsletter:home' %}">Bowhunting Newsletter</a></p>
+      <p class="brand"><a href="{% url 'newsletter:home' %}">Broadhead Brief</a></p>
+      <p class="tagline">Weekly bowhunting law &amp; land updates, state by state</p>
     </div>
   </header>
 
@@ -18,7 +19,9 @@
   </main>
 
   <footer class="site-footer">
-    <p>State-by-state bowhunting law, land, and disease updates — once a week.</p>
+    <p>Broadhead Brief — law changes, public land updates, and EHD reports for the states you hunt, once a week.</p>
   </footer>
+
+  {% block scripts %}{% endblock %}
 </body>
 </html>

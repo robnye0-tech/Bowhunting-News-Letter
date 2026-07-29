@@ -78,7 +78,7 @@ class Command(BaseCommand):
                         "unsubscribe_url": unsubscribe_url,
                     },
                 )
-                subject = f"{state.name} Bowhunting Update — Week of {week_of.strftime('%B %d, %Y')}"
+                subject = f"Broadhead Brief — {state.name} — Week of {week_of.strftime('%B %d, %Y')}"
                 send_email(subscriber.email, subject, html)
                 sent_count += 1
 

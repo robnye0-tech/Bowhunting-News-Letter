@@ -5,11 +5,14 @@ from django.urls import reverse
 from .emails import send_email
 from .forms import SignupForm
 from .models import Subscriber, Subscription
+from .regions import grouped_states
 
 
 def home(request):
     if request.method == "POST":
         form = SignupForm(request.POST)
+        selected_ids = {int(v) for v in request.POST.getlist("states") if v.isdigit()}
+
         if form.is_valid():
             email = form.cleaned_data["email"]
             states = form.cleaned_data["states"]
@@ -33,8 +36,13 @@ def home(request):
             return redirect("newsletter:signup_pending")
     else:
         form = SignupForm()
+        selected_ids = set()
 
-    return render(request, "newsletter/home.html", {"form": form})
+    return render(
+        request,
+        "newsletter/home.html",
+        {"form": form, "state_regions": grouped_states(), "selected_ids": selected_ids},
+    )
 
 
 def _send_confirmation_email(request, subscriber):
@@ -45,7 +53,7 @@ def _send_confirmation_email(request, subscriber):
         "newsletter/emails/confirm_email.html",
         {"confirm_url": confirm_url},
     )
-    send_email(subscriber.email, "Confirm your Bowhunting Newsletter subscription", html)
+    send_email(subscriber.email, "Confirm your Broadhead Brief subscription", html)
 
 
 def signup_pending(request):

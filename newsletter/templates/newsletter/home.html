@@ -2,14 +2,77 @@
 
 {% block content %}
 <section class="hero">
-  <h1>Weekly bowhunting law &amp; land updates, for the states you hunt</h1>
-  <p>
+  <h1>Bowhunting law &amp; land updates for the states you actually hunt</h1>
+  <p class="lede">
     Law changes, proposed regulation changes, public land updates, and EHD
-    reports for up to 3 states — plus a weekly gear pick — delivered every
+    reports — plus a weekly gear pick — for up to 3 states, delivered every
     week.
   </p>
+  <a href="#signup" class="button">Get My Weekly Brief</a>
+</section>
 
-  <form method="post" class="signup-form">
+<section class="features">
+  <h2>What you get, every week</h2>
+  <div class="feature-grid">
+    <div class="feature-card">
+      <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="5" y="3" width="14" height="18" rx="1"></rect>
+        <line x1="8" y1="8" x2="16" y2="8"></line>
+        <line x1="8" y1="12" x2="16" y2="12"></line>
+        <line x1="8" y1="16" x2="13" y2="16"></line>
+      </svg>
+      <h3>Law Changes</h3>
+      <p>Season dates, bag limits, and equipment rule changes as they happen.</p>
+    </div>
+    <div class="feature-card">
+      <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="4" y1="21" x2="20" y2="21"></line>
+        <path d="M6 21 V10 M10 21 V6 M14 21 V13 M18 21 V8"></path>
+      </svg>
+      <h3>Proposed Changes</h3>
+      <p>Regulations up for public comment, before they're locked in.</p>
+    </div>
+    <div class="feature-card">
+      <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="3,18 9,8 13,14 16,10 21,18"></polyline>
+        <line x1="3" y1="18" x2="21" y2="18"></line>
+      </svg>
+      <h3>Public Land Updates</h3>
+      <p>Access changes, closures, and new ground opened to hunting.</p>
+    </div>
+    <div class="feature-card">
+      <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <polygon points="12,3 22,20 2,20"></polygon>
+        <line x1="12" y1="9" x2="12" y2="14"></line>
+        <circle cx="12" cy="17" r="0.6" fill="currentColor" stroke="none"></circle>
+      </svg>
+      <h3>EHD Reports</h3>
+      <p>Outbreak reports so you know what's happening before the season.</p>
+    </div>
+  </div>
+</section>
+
+<section class="how-it-works">
+  <h2>How it works</h2>
+  <div class="steps">
+    <div class="step">
+      <div class="step-number">1</div>
+      <p>Pick up to 3 states below.</p>
+    </div>
+    <div class="step">
+      <div class="step-number">2</div>
+      <p>Confirm your email — one click, no account needed.</p>
+    </div>
+    <div class="step">
+      <div class="step-number">3</div>
+      <p>Get your brief every week, right up until you unsubscribe.</p>
+    </div>
+  </div>
+</section>
+
+<section class="signup-section" id="signup">
+  <h2>Choose your states</h2>
+  <form method="post" class="signup-card">
     {% csrf_token %}
     <div class="field">
       {{ form.email.label_tag }}
@@ -18,14 +81,37 @@
     </div>
 
     <div class="field">
-      <p class="field-label">Choose up to 3 states</p>
-      <div class="state-grid">
-        {{ form.states }}
+      <div class="field-label-row">
+        <p class="field-label">Choose up to 3 states</p>
+        <span class="state-count">0 of 3 selected</span>
+      </div>
+      <div class="regions-grid">
+        {% for region_label, states in state_regions %}
+          <fieldset class="region">
+            <legend>{{ region_label }}</legend>
+            {% for state in states %}
+              <label class="state-option">
+                <input
+                  type="checkbox"
+                  name="states"
+                  value="{{ state.id }}"
+                  {% if state.id in selected_ids %}checked{% endif %}
+                >
+                <span>{{ state.name }}</span>
+              </label>
+            {% endfor %}
+          </fieldset>
+        {% endfor %}
       </div>
       {{ form.states.errors }}
     </div>
 
-    <button type="submit">Subscribe</button>
+    <button type="submit" class="button">Get My Weekly Brief</button>
+    <p class="form-note">No spam. Unsubscribe anytime.</p>
   </form>
 </section>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/newsletter/signup.js" defer></script>
 {% endblock %}

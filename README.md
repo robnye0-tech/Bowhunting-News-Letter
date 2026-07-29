@@ -1,4 +1,4 @@
-# Bowhunting Newsletter
+# Broadhead Brief
 
 A Django app for a weekly, state-by-state bowhunting newsletter. Subscribers
 pick up to 3 states and get a weekly email per state covering law changes,
@@ -157,7 +157,7 @@ Since this runs on your own PC, use Task Scheduler to run the weekly jobs
 automatically:
 
 1. Open **Task Scheduler** → **Create Task**.
-2. **General tab:** name it (e.g. "Bowhunting Newsletter — Aggregate").
+2. **General tab:** name it (e.g. "Broadhead Brief — Aggregate").
 3. **Triggers tab:** New → Weekly, pick a day/time (e.g. Monday 7:00 AM).
 4. **Actions tab:** New → Action "Start a program" →
    Program: `C:\path\to\project\scripts\run_aggregate.bat`
