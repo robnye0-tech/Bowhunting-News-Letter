@@ -238,8 +238,9 @@ The pieces that make it deployable, for reference:
   app with gunicorn (`web`).
 - **Database** — reads a `DATABASE_URL` environment variable if one is set
   (via `dj-database-url`); falls back to the same local SQLite file when
-  it isn't. Most hosts set `DATABASE_URL` automatically when you attach a
-  Postgres database — nothing to configure by hand.
+  it isn't. Some hosts inject `DATABASE_URL` into your app automatically
+  when you attach Postgres; on Render's plain dashboard flow (used below)
+  you copy/paste it in yourself — one extra step, still no code changes.
 - **Static files** — served directly by the app via `whitenoise`, so you
   don't need a separate static file host or CDN.
 - **Security settings** — `SECURE_SSL_REDIRECT` and related cookie flags
@@ -257,14 +258,100 @@ set through your host's dashboard instead of a `.env` file):
 | `SITE_BASE_URL` | `https://` + your domain |
 | `RESEND_API_KEY` | Your real Resend API key |
 | `DEFAULT_FROM_EMAIL` | An address on your Resend-verified domain |
-| `DATABASE_URL` | Usually set automatically by the host when you attach Postgres |
+| `DATABASE_URL` | On Render: the Postgres instance's Internal Database URL, pasted in manually |
 
 The weekly `aggregate_content` / `run_watch_bot` / `send_weekly_newsletter`
-jobs still need to run on a schedule once you're live — most hosts have
-their own scheduled-job feature (Render Cron Jobs, Railway Cron Schedules)
-that runs a one-off command on a timer; point it at
-`python manage.py send_weekly_newsletter` the same way Task Scheduler does
-locally.
+jobs still need to run on a schedule once you're live. Two ways to do that
+— see "Getting a domain and going live" below for the recommended one:
+
+- **Keep Task Scheduler running locally** (recommended to start) — point
+  your local `.env`'s `DATABASE_URL` at the production Postgres database
+  and keep using Windows Task Scheduler exactly as before. The jobs run on
+  your PC but read/write the same live database the public site uses, so
+  nothing about your weekly workflow changes. No extra cost.
+- **Move the jobs to the host's own scheduler** (e.g. Render Cron Jobs) —
+  fully cloud-based, but costs extra per job (Render: ~$1/month minimum
+  each) and `run_watch_bot`'s `scraped_updates` snapshot files won't
+  persist between runs on most hosts' default (ephemeral) disks, since
+  each cron run gets a fresh container — only the draft `ContentItem`s it
+  also creates in the database would survive. Worth it later if you want
+  to stop relying on your PC being on; not necessary to start.
+
+## Getting a domain and going live (Cloudflare + Render)
+
+Concrete step-by-step for the combination recommended above. Render has a
+free web service tier and a free-for-90-days Postgres tier; Cloudflare
+Registrar sells domains at wholesale price with no markup.
+
+### 1. Register your domain (Cloudflare)
+
+1. Go to the [Cloudflare dashboard](https://dash.cloudflare.com/) → **Domain
+   Registration** → **Register Domains**, search for the name you want.
+2. Fill in registrant contact info, choose a payment method, accept the
+   Domain Registration Agreement, and complete the purchase.
+3. Check your email and verify the registrant address — ICANN requires
+   this before the domain fully activates.
+4. That's it for now — you'll point its DNS at Render in step 4.
+
+### 2. Push this repo to GitHub
+
+Render deploys from a GitHub repo. If you haven't already, make sure your
+latest code (including everything from this session) is pushed to your
+GitHub repo — Render will connect to it directly.
+
+### 3. Create the Render web service + database
+
+1. Sign up at [render.com](https://render.com) (you can sign in with
+   GitHub, which also makes connecting the repo one click).
+2. **New +** → **PostgreSQL**. Give it a name, leave the free plan
+   selected, create it. Once it's up, Render shows an **Internal Database
+   URL** and an **External Database URL** — you'll use both later.
+3. **New +** → **Web Service** → connect your GitHub repo.
+4. Set:
+   - **Build Command:** `pip install -r requirements.txt`
+   - **Start Command:** `python manage.py migrate && python manage.py collectstatic --noinput && gunicorn config.wsgi`
+5. Under **Environment**, add the variables from the table above:
+   `DJANGO_SECRET_KEY`, `DJANGO_DEBUG=False`, `RESEND_API_KEY`,
+   `DEFAULT_FROM_EMAIL`. For `DATABASE_URL`, paste the **Internal Database
+   URL** from the Postgres instance you created. Leave `ALLOWED_HOSTS` and
+   `SITE_BASE_URL` for the next step, once you know your final domain.
+6. Deploy. Render gives you a working `https://your-service.onrender.com`
+   URL immediately, before your custom domain is even connected — good for
+   confirming the deploy actually works.
+7. Set `ALLOWED_HOSTS` to that `onrender.com` hostname for now and redeploy
+   if the site doesn't load; you'll add your real domain to it next.
+
+### 4. Connect your domain
+
+1. In the Render web service → **Settings** → **Custom Domain**, add your
+   domain (both `yourdomain.com` and `www.yourdomain.com` if you want
+   both). Render shows you the DNS records it needs (usually a `CNAME` for
+   `www` and an `A`/`ALIAS` record for the bare domain).
+2. In Cloudflare → your domain → **DNS**, add those exact records Render
+   gave you.
+3. Back in the Render **Environment** tab, update:
+   - `ALLOWED_HOSTS` → `yourdomain.com,www.yourdomain.com`
+   - `SITE_BASE_URL` → `https://yourdomain.com`
+4. Redeploy. DNS can take anywhere from a few minutes to a few hours to
+   propagate — Render's dashboard shows when the certificate/domain check
+   passes.
+
+### 5. Finish setup on the live site
+
+1. Creating your admin login needs a one-off command, not a web page: open
+   the Render web service's **Shell** tab and run
+   `python manage.py createsuperuser`, then follow the prompts.
+2. In that same Shell tab, run `python manage.py seed_states` once to
+   populate all 50 states + DC in the production database.
+3. Visit `https://yourdomain.com/admin/` and log in with the superuser you
+   just created.
+4. Locally, regenerate the QR code against the real domain:
+   `python manage.py generate_signup_qr --url https://yourdomain.com/`.
+5. Point your local `.env`'s `DATABASE_URL` at the Postgres instance's
+   **External Database URL** (shown on that database's page in the Render
+   dashboard), so your existing Windows Task Scheduler jobs
+   (`run_aggregate.bat`, `start_watch_bot.bat`, `run_send.bat`) read/write
+   the live database instead of your local SQLite file.
 
 ## Signup QR code
 
