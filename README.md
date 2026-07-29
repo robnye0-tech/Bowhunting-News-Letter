@@ -168,6 +168,38 @@ automatically:
 
 Your PC needs to be on (not asleep) at the scheduled time for these to run.
 
+## Signup QR code
+
+Generate a QR code that links straight to the signup page (the home page
+already asks for email + up to 3 states in one step, so there's nothing
+extra to build — the QR just needs to point there):
+
+```powershell
+python manage.py generate_signup_qr
+```
+
+This saves a PNG to `qr_codes/signup_qr.png`, encoding `SITE_BASE_URL`
+(from `.env`) + the signup page path.
+
+**Before printing or sharing it anywhere**, make sure `SITE_BASE_URL` in
+`.env` is set to a real, public domain — not `http://127.0.0.1:8000`.
+A QR code encoding a localhost address will only work on devices on your
+own machine; nobody scanning it from a flyer or a shop counter will reach
+your site. The command warns you if it detects a local address. Once you
+have real hosting set up (see the note in "What's automated vs. what needs
+a human" above), update `SITE_BASE_URL` and re-run the command to get a
+working code.
+
+Options:
+
+```powershell
+python manage.py generate_signup_qr --url https://example.com/         # encode a different URL
+python manage.py generate_signup_qr --out marketing\qr.png             # custom output path
+```
+
+**Always test-scan the generated PNG with your phone before printing or
+distributing it.**
+
 ## Subscriber limits
 
 Each subscriber can select up to 3 states at signup (enforced in the
