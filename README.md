@@ -24,12 +24,17 @@ Be aware of this before relying on it:
   aggregation and just add `ContentItem`s manually in the admin each week.
 - **The product list is fully manual**, by design (you add products per
   state each week in the admin).
-- **This is set up to run locally on your Windows PC**, not on a public
-  server. That means: it can only accept signups and send newsletters while
-  your PC is on, awake, and (if you want the public to actually reach the
-  signup page) network-reachable. If you later want real public signups
-  24/7, this same codebase can be deployed to a normal Python host (Render,
-  Railway, PythonAnywhere, a VPS, etc.) — ask if you want help with that.
+- **Local Windows use and real 24/7 hosting are both supported.** Day-to-day
+  development happens on your PC with SQLite. When you're ready to go
+  public, see "Deploying to a real host" below — the same codebase deploys
+  to a normal Python host without changes, it just needs a few extra
+  environment variables set.
+- **The watch bot (`run_watch_bot`) is a generic change detector, not a
+  smart reader.** It flags "this page's text changed since last time," for
+  both RSS and plain agency pages. It cannot tell *what* changed or whether
+  it matters — every state site is laid out differently. A human still
+  needs to read every flagged item before it goes in the newsletter. See
+  "The watch bot" below.
 
 ## Tech stack
 
@@ -91,10 +96,15 @@ scripts/
 4. **Set up the database and an admin login:**
 
    ```powershell
+   python manage.py makemigrations
    python manage.py migrate
    python manage.py seed_states
    python manage.py createsuperuser
    ```
+
+   `makemigrations` generates the database schema from `models.py` (this
+   only needs to be re-run when models change, e.g. after pulling an
+   update to this repo); `migrate` actually creates the tables.
 
    Follow the prompts to set an admin username/password.
 
@@ -140,6 +150,55 @@ just skip aggregation for it and add that state's `ContentItem`s by hand
 each week instead. The [Bureau of Land Management's RSS page](https://www.blm.gov/info/RSS-feeds)
 is also worth checking for public-land content in BLM-heavy western states.
 
+For states with no RSS feed at all, add a **"Plain page (watched for
+changes)"** source instead (same admin screen) — point it at the agency's
+news/regulations page. See "The watch bot" below for how that gets checked.
+
+## The watch bot
+
+`run_watch_bot` is a bot you start and stop yourself. Start it and leave it
+running in a terminal window; it checks every active content source (RSS
+feeds *and* plain pages) on a timer until you close the window or press
+Ctrl+C.
+
+```powershell
+python manage.py run_watch_bot
+```
+
+or double-click `scripts\start_watch_bot.bat`.
+
+What it does with what it finds:
+
+- **RSS sources** — same as `aggregate_content`: new articles become draft
+  `ContentItem`s in the admin.
+- **Plain page sources** — it fetches the page, strips it down to visible
+  text, and compares that text to what it saw last time:
+  - **First time checking a source:** nothing to compare yet, so it just
+    records a baseline and writes a snapshot file. No draft item yet.
+  - **Unchanged since last check:** does nothing.
+  - **Changed since last check:** writes a snapshot file to
+    `scraped_updates\<STATE_CODE>\` (created automatically) with the page
+    text, and creates a draft `ContentItem` in the admin so it flows into
+    the normal review/approve pipeline alongside RSS finds.
+
+**Be clear about what this is and isn't.** It's a generic change detector —
+"this page's text is different than last time" — not a system that reads
+and understands the page. Every state agency site is laid out differently,
+so it can't reliably tell "the deer season dates changed" from "they added
+a banner ad." Every flagged page still needs a human to actually read it
+and decide whether/how it belongs in the newsletter, same as everything
+else in this project. It also won't see JavaScript-rendered content (some
+modern agency sites build their page with JS after load) — if a source
+keeps reporting "no readable text," that's likely why.
+
+Options:
+
+```powershell
+python manage.py run_watch_bot --once              # single pass and exit (good for Task Scheduler)
+python manage.py run_watch_bot --interval 12        # check every 12 hours instead of the 6-hour default
+python manage.py run_watch_bot --out my_folder      # write snapshots somewhere else
+```
+
 ## Setting up real email sending (Resend)
 
 1. Create a free account at [resend.com](https://resend.com).
@@ -167,6 +226,45 @@ automatically:
    content in between.
 
 Your PC needs to be on (not asleep) at the scheduled time for these to run.
+
+## Deploying to a real host
+
+The app is ready to deploy as-is to a normal Python host — see the
+"Getting a domain and going live" walkthrough for the actual step-by-step.
+The pieces that make it deployable, for reference:
+
+- **`Procfile`** — standard convention most Python hosts read: runs
+  migrations + `collectstatic` on each deploy (`release`), then serves the
+  app with gunicorn (`web`).
+- **Database** — reads a `DATABASE_URL` environment variable if one is set
+  (via `dj-database-url`); falls back to the same local SQLite file when
+  it isn't. Most hosts set `DATABASE_URL` automatically when you attach a
+  Postgres database — nothing to configure by hand.
+- **Static files** — served directly by the app via `whitenoise`, so you
+  don't need a separate static file host or CDN.
+- **Security settings** — `SECURE_SSL_REDIRECT` and related cookie flags
+  turn on automatically once `DJANGO_DEBUG=False`; they're off locally so
+  they never interfere with `runserver` on your PC.
+
+Required environment variables in production (same names as `.env`, just
+set through your host's dashboard instead of a `.env` file):
+
+| Variable | Production value |
+|---|---|
+| `DJANGO_SECRET_KEY` | A long random string (different from your local one) |
+| `DJANGO_DEBUG` | `False` |
+| `ALLOWED_HOSTS` | Your domain, e.g. `broadheadbrief.com` |
+| `SITE_BASE_URL` | `https://` + your domain |
+| `RESEND_API_KEY` | Your real Resend API key |
+| `DEFAULT_FROM_EMAIL` | An address on your Resend-verified domain |
+| `DATABASE_URL` | Usually set automatically by the host when you attach Postgres |
+
+The weekly `aggregate_content` / `run_watch_bot` / `send_weekly_newsletter`
+jobs still need to run on a schedule once you're live — most hosts have
+their own scheduled-job feature (Render Cron Jobs, Railway Cron Schedules)
+that runs a one-off command on a timer; point it at
+`python manage.py send_weekly_newsletter` the same way Task Scheduler does
+locally.
 
 ## Signup QR code
 

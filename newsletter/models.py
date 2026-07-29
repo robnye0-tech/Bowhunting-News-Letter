@@ -63,6 +63,7 @@ class ContentSource(models.Model):
 
     class SourceType(models.TextChoices):
         RSS = "rss", "RSS/Atom feed"
+        PAGE = "page", "Plain page (watched for changes)"
 
     state = models.ForeignKey(State, on_delete=models.CASCADE, related_name="sources")
     label = models.CharField(max_length=200, help_text="e.g. 'Texas Parks & Wildlife News'")
@@ -70,6 +71,12 @@ class ContentSource(models.Model):
     source_type = models.CharField(max_length=20, choices=SourceType.choices, default=SourceType.RSS)
     active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    # Used only for source_type=PAGE: lets the watch bot detect when a page's
+    # text content has changed since it last checked, instead of re-flagging
+    # an unchanged page every run.
+    last_seen_hash = models.CharField(max_length=64, blank=True, default="")
+    last_checked_at = models.DateTimeField(null=True, blank=True)
 
     class Meta:
         ordering = ["state__name", "label"]

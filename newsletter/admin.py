@@ -34,9 +34,10 @@ class SubscriberAdmin(admin.ModelAdmin):
 
 @admin.register(ContentSource)
 class ContentSourceAdmin(admin.ModelAdmin):
-    list_display = ("label", "state", "url", "source_type", "active")
+    list_display = ("label", "state", "url", "source_type", "active", "last_checked_at")
     list_filter = ("state", "active", "source_type")
     search_fields = ("label", "url")
+    readonly_fields = ("last_seen_hash", "last_checked_at")
 
 
 @admin.register(ContentItem)
