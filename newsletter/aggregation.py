@@ -33,6 +33,27 @@ def strip_tags(raw: str) -> str:
     return TAG_RE.sub("", raw or "").strip()
 
 
+# Some bot-protection services return an HTTP 200 "success" status even when
+# showing a block/challenge page instead of the real content (confirmed with
+# NJ's Incapsula block during real-world testing) — a plain status-code check
+# doesn't catch that. Fall back to recognizing common block-page wording.
+BLOCK_PAGE_MARKERS = [
+    "incapsula",
+    "request unsuccessful",
+    "access denied",
+    "attention required",
+    "pardon our interruption",
+    "checking your browser",
+    "are you a robot",
+    "verify you are human",
+]
+
+
+def _looks_like_block_page(text: str) -> bool:
+    lowered = text.lower()
+    return any(marker in lowered for marker in BLOCK_PAGE_MARKERS)
+
+
 def process_rss_source(source, week_of):
     """Fetch an RSS/Atom feed and create draft ContentItems for new entries.
 
@@ -98,6 +119,9 @@ def process_page_source(source, week_of, output_root):
 
     if not text:
         return False, "page had no readable text (may require JavaScript)"
+
+    if _looks_like_block_page(text):
+        return False, "blocked by the site's bot protection (got a block page, not real content)"
 
     content_hash = hashlib.sha256(text.encode("utf-8")).hexdigest()
     is_first_check = not source.last_seen_hash
