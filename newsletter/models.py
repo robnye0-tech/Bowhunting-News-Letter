@@ -13,6 +13,10 @@ def current_week_of():
 class State(models.Model):
     code = models.CharField(max_length=2, unique=True, help_text="Two-letter postal code, e.g. TX")
     name = models.CharField(max_length=50, unique=True)
+    is_launched = models.BooleanField(
+        default=False,
+        help_text="Only launched states are offered on the public signup form.",
+    )
 
     class Meta:
         ordering = ["name"]

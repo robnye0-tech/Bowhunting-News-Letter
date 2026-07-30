@@ -7,7 +7,7 @@ from .models import State
 class SignupForm(forms.Form):
     email = forms.EmailField()
     states = forms.ModelMultipleChoiceField(
-        queryset=State.objects.all(),
+        queryset=State.objects.filter(is_launched=True),
         widget=forms.CheckboxSelectMultiple,
     )
 

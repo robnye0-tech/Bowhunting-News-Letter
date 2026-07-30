@@ -33,7 +33,7 @@ class Command(BaseCommand):
         week_of = current_week_of()
         dry_run = options["dry_run"]
 
-        for state in State.objects.all():
+        for state in State.objects.filter(is_launched=True):
             issue, _ = NewsletterIssue.objects.get_or_create(state=state, week_of=week_of)
             if issue.status == NewsletterIssue.Status.SENT:
                 continue

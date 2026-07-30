@@ -35,6 +35,12 @@ Be aware of this before relying on it:
   it matters — every state site is laid out differently. A human still
   needs to read every flagged item before it goes in the newsletter. See
   "The watch bot" below.
+- **Only "launched" states are offered on the signup form.** All 51 states
+  exist in the database (so you can prep content sources ahead of time),
+  but the public can only pick from states you've explicitly launched —
+  see "Launching states" below. Don't offer a state before you have a real
+  content pipeline for it; an empty inbox every week is worse than not
+  offering it yet.
 
 ## Tech stack
 
@@ -136,6 +142,22 @@ scripts/
    already sent for the week are skipped.
    - Add `--dry-run` to see recipient counts without actually sending
      anything, useful for checking your work first.
+
+## Launching states
+
+Only launched states show up on the public signup form and get processed
+by `send_weekly_newsletter`. All 51 states exist in the database from
+`seed_states`, but none start out launched — you turn them on deliberately
+as you build out a real content pipeline for each.
+
+```powershell
+python manage.py launch_states ME NH VT NY CT RI NJ PA
+```
+
+Run it again anytime with more codes to expand later — states already
+launched are left alone, so it's always safe to re-run. To pull a state
+back off the signup form, uncheck its **Is launched** box in
+`/admin/newsletter/state/` (it's editable right in the list view).
 
 ## Adding content sources
 

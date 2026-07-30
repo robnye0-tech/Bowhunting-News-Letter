@@ -9,7 +9,9 @@ admin.site.index_title = "Weekly Curation Dashboard"
 
 @admin.register(State)
 class StateAdmin(admin.ModelAdmin):
-    list_display = ("name", "code")
+    list_display = ("name", "code", "is_launched")
+    list_filter = ("is_launched",)
+    list_editable = ("is_launched",)
     search_fields = ("name", "code")
 
 

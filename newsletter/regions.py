@@ -16,8 +16,9 @@ REGION_MAP = {
 
 def grouped_states():
     """Return [(region_label, [State, ...]), ...] using REGION_MAP order,
-    with states in each group ordered by name."""
-    states_by_code = {s.code: s for s in State.objects.all()}
+    with states in each group ordered by name. Only includes launched states
+    — the ones actually offered on the public signup form."""
+    states_by_code = {s.code: s for s in State.objects.filter(is_launched=True)}
     groups = []
     for label, codes in REGION_MAP.items():
         states = sorted(
