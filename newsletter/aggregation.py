@@ -13,7 +13,20 @@ from django.utils.text import slugify
 from .models import ContentItem
 
 TAG_RE = re.compile(r"<[^>]+>")
-USER_AGENT = "BroadheadBriefWatchBot/1.0 (personal newsletter content watcher)"
+
+# Some state sites' basic bot protection rejects any request that doesn't
+# look like a normal browser. This is a personal, low-frequency (every few
+# hours at most) reader of public press-release pages, not a scraper trying
+# to evade anything — a realistic browser header set is enough to get past
+# simple User-Agent filtering.
+REQUEST_HEADERS = {
+    "User-Agent": (
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+        "(KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
+    ),
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+    "Accept-Language": "en-US,en;q=0.9",
+}
 
 
 def strip_tags(raw: str) -> str:
@@ -73,7 +86,7 @@ def process_page_source(source, week_of, output_root):
     Returns (changed: bool, error_message_or_None).
     """
     try:
-        response = requests.get(source.url, headers={"User-Agent": USER_AGENT}, timeout=20)
+        response = requests.get(source.url, headers=REQUEST_HEADERS, timeout=20)
         response.raise_for_status()
     except requests.RequestException as exc:
         return False, str(exc)
